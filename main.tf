@@ -171,8 +171,8 @@ resource "aws_security_group" "ec2-sg" {
   }
 
   ingress {
-    from_port   = 80
-    to_port     = 80
+    from_port   = 5555
+    to_port     = 5555
     protocol    = "tcp"
     cidr_blocks = [var.network_address_space]
   }
@@ -321,6 +321,7 @@ resource "aws_autoscaling_group" "api-asg" {
   force_delete              = true
   launch_configuration      = aws_launch_configuration.api-launch-config.name
   vpc_zone_identifier       = [aws_subnet.subnet1.id, aws_subnet.subnet2.id]
+  target_group_arns         = [aws_lb_target_group.api-tg.arn]
 }
 
 # Database
