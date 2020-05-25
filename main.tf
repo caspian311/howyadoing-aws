@@ -186,6 +186,27 @@ resource "aws_security_group" "ec2-sg" {
   tags = { Name = "${var.app_tag}-ec2" }
 }
 
+resource "aws_security_group" "ec2-jump-box-sg" {
+  name   = "${var.app_tag}_ec2_jump_box_sg"
+  vpc_id = aws_vpc.vpc.id
+
+  # maybe restrict to network space and create a jump box later
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = { Name = "${var.app_tag}-ec2-jumpbox" }
+}
 
 resource "aws_security_group" "db-sg" {
   name   = "${var.app_tag}_db_sg"
@@ -362,6 +383,18 @@ resource "aws_s3_bucket" "website" {
   }]
 }
 EOF
+}
+
+# Jump Box
+
+resource "aws_instance" "jump-box" {
+  ami                    = data.aws_ami.aws-linux.id
+  instance_type          = "t2.micro"
+  subnet_id              = aws_subnet.subnet1.id
+  vpc_security_group_ids = [aws_security_group.ec2-jump-box-sg.id]
+  key_name               = aws_key_pair.key_pair.key_name
+
+  tags = { Name = "${var.app_tag}-jump-box" }
 }
 
 ######################################################
