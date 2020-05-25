@@ -257,12 +257,12 @@ resource "aws_key_pair" "key_pair" {
 
 resource "local_file" "public_key_openssh" {
     content     = tls_private_key.private_key.public_key_openssh
-    filename    = "${var.app_tag}.pub"
+    filename    = "${var.app_tag}-key.pub"
 }
 
 resource "local_file" "private_key_pem" {
     content     = tls_private_key.private_key.private_key_pem
-    filename    = "${var.app_tag}.pem"
+    filename    = "${var.app_tag}-key.pem"
 }
 
 # Launch Configuration
