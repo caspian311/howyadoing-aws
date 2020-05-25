@@ -162,12 +162,11 @@ resource "aws_security_group" "ec2-sg" {
   name   = "${var.app_tag}_ec2_sg"
   vpc_id = aws_vpc.vpc.id
 
-  # maybe restrict to network space and create a jump box later
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [var.network_address_space]
   }
 
   ingress {
