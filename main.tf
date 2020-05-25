@@ -305,7 +305,14 @@ docker pull node
 
 git clone https://github.com/caspian311/howyadoing-api.git /root/howyadoing-api
 git checkout release
-echo "docker run ... --rm -v /root/howyadoing-api:/app -p 5555:5555 node /app/startup.sh"
+docker run --rm \
+    -e NODE_ENV=production \
+    -e DATABASE_HOST=${aws_db_instance.database.address} \
+    -e DATABASE_NAME=${aws_db_instance.database.name} \
+    -e DATABASE_USER=${aws_db_instance.database.username} \
+    -e DATABASE_PASSWORD=${aws_db_instance.database.password} \
+    -v /root/howyadoing-api:/app \
+    node /app/migrate.sh
 docker run --rm \
     -e NODE_ENV=production \
     -e DATABASE_HOST=${aws_db_instance.database.address} \
