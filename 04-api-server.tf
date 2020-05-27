@@ -98,7 +98,6 @@ EOF
 
 resource "aws_autoscaling_policy" "api-asg-policy" {
   name                   = "${var.app_tag}-asg-policy"
-  adjustment_type        = "ChangeInCapacity"
   autoscaling_group_name = aws_autoscaling_group.api-asg.name
   policy_type            = "TargetTrackingScaling"
 
