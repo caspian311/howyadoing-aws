@@ -24,12 +24,21 @@ variable "site_bucket_name" {
     default = "howyadoing.coffeemonkey.net"
 }
 
+variable "api_name" {
+    default = "howyadoing-api.coffeemonkey.net"
+}
+
 # Providers
 
 provider "aws" {
   access_key = var.aws_access_key
   secret_key = var.aws_secret_key
   region     = var.region
+}
+
+provider "aws" {
+  alias                   = "useast1"
+  region                  = "us-east-1"
 }
 
 # Remote storage

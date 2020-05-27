@@ -1,6 +1,15 @@
+resource "aws_route53_zone" "site_zone" {
+  name    = "coffeemonkey.net"
+  comment = "HostedZone created by Route53 Registrar"
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
 resource "aws_route53_record" "api-record" {
-  zone_id = "Z12372QLT9T7P5"
-  name    = "howyadoing-api.coffeemonkey.net"
+  zone_id = aws_route53_zone.site_zone.zone_id
+  name    = var.api_name
   type    = "A"
   
   alias {
@@ -11,13 +20,13 @@ resource "aws_route53_record" "api-record" {
 }
 
 resource "aws_route53_record" "web-record" {
-  zone_id = "Z12372QLT9T7P5"
-  name    = "howyadoing.coffeemonkey.net"
+  zone_id = aws_route53_zone.site_zone.zone_id
+  name    = var.site_bucket_name
   type    = "A"
-  
+
   alias {
-    name                   = "s3-website.us-east-2.amazonaws.com"
-    zone_id                = aws_s3_bucket.website.hosted_zone_id
+    name                   = aws_cloudfront_distribution.cdn.domain_name
+    zone_id                = aws_cloudfront_distribution.cdn.hosted_zone_id
     evaluate_target_health = false
   }
 }
