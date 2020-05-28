@@ -27,7 +27,27 @@ resource "aws_cloudfront_distribution" "cdn" {
     default_ttl            = 1000
     max_ttl                = 86400
   }
-  
+
+  ordered_cache_behavior {
+    path_pattern     = "*"
+    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH",
+                      "POST", "PUT"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = "${var.app_tag}-origin"
+    
+    forwarded_values {
+      query_string = true
+      cookies {
+        forward = "all"
+      }
+    }
+
+    viewer_protocol_policy = "redirect-to-https"
+    min_ttl                = 0
+    default_ttl            = 1000
+    max_ttl                = 86400
+  }
+
   restrictions {
     geo_restriction {
       restriction_type = "none"
