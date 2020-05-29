@@ -59,4 +59,11 @@ resource "aws_cloudfront_distribution" "cdn" {
     ssl_support_method  = "sni-only"
     minimum_protocol_version = "TLSv1.1_2016"
   }
+
+  custom_error_response {
+    error_caching_min_ttl = 0
+    error_code = 404
+    response_code = 404
+    response_page_path = "/error.html"
+  }
 }
